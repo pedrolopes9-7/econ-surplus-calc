@@ -3,21 +3,6 @@ import pylab as pl
 import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
 
-def newton(f,Df,x0,epsilon,max_iter):
-    xn = x0
-    for n in range(0,max_iter):
-        fxn = f(xn)
-        if abs(fxn) < epsilon:
-            print('Solução encontrada em ',n,' iterações.')
-            return xn
-        Dfxn = Df(xn)
-        if Dfxn == 0:
-            print('Erro: derivada da função igual a zero')
-            return None
-        xn = xn - fxn/Dfxn
-    print('Erro: Máximo de iterações alcançado.')
-    return None
-
 def simps(f,a,b,N=50):
     if N % 2 == 1:
         raise ValueError("N must be an even integer.")
@@ -28,7 +13,7 @@ def simps(f,a,b,N=50):
     return S
 
 def cons_surplus(pe,qe,Dq):
-    cs = simps(Dq(q),0,qe,10) - pe*qe
+    cs = simps(Dq,0,qe,10) - pe*qe
     return cs
 
 def prod_surplus(pe,qe,Sq):
@@ -40,14 +25,20 @@ def surplus(Sq, Dq):
     x0 = 1
     qe = fsolve(y, x0)
     pe = Sq(qe)
-    cs = cons_surplus(pe,qe,Sq)
+    cs = cons_surplus(pe,qe,Dq)
     ps = prod_surplus(pe,qe,Sq)
     
+    print ('Equilibrio de mercado encontrado em [pe;qe] = [',pe,qe,']')
     print('Excedente de oferta igual a: ' , ps)
     print('Excedente de produção igual a: ' , cs)
 
-q = np.linspace(-100,100,1000)
+'''
+    Exemplo de teste:
+        Função de demanda: D(q) = 20 / (q+1)
+        Função de oferta: S(q) = q + 2
+'''
 
+q = np.linspace(-100,100,1000)
 dq = lambda q: 20 / (q + 1)
 sq = lambda q: q + 2
 
