@@ -39,6 +39,6 @@ def surplus(Sq, Dq):
 
 q = np.linspace(-100,100,1000)
 dq = lambda q: 20 / (q + 1)
-sq = lambda q: q + 2
+sq = lambda q: q + 5
 
 surplus(sq, dq)
